@@ -2,10 +2,12 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Pill, MapPin, ShieldCheck, Menu, X, ArrowRight } from 'lucide-react';
+import { Pill, MapPin, ShieldCheck, Menu, X, ArrowRight, User as UserIcon } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-surface-200 shadow-sm">
@@ -48,19 +50,42 @@ export function Navbar() {
 
           {/* Desktop CTA / Auth buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/login"
-              className="px-4 py-2 text-sm font-medium text-brand-800 hover:text-brand-900 transition-colors rounded-lg hover:bg-brand-50"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              className="px-4 py-2 text-sm font-medium text-white bg-brand-800 hover:bg-brand-900 rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
-            >
-              Register
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+            {user ? (
+              <div className="flex items-center gap-3">
+                <Link
+                  href="/profile"
+                  className="px-3 py-1.5 text-xs font-semibold text-brand-900 bg-brand-50 hover:bg-brand-100 border border-brand-200 rounded-lg transition-colors flex items-center gap-2"
+                >
+                  <div className="w-5 h-5 rounded-full bg-brand-800 text-white flex items-center justify-center text-[10px] font-bold">
+                    {profile?.display_name ? profile.display_name.charAt(0).toUpperCase() : user.email?.charAt(0).toUpperCase()}
+                  </div>
+                  <span>{profile?.display_name || user.email?.split('@')[0]}</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => signOut()}
+                  className="px-3 py-1.5 text-xs font-medium text-slate-500 hover:text-slate-800 transition-colors"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="px-4 py-2 text-sm font-medium text-brand-800 hover:text-brand-900 transition-colors rounded-lg hover:bg-brand-50"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-4 py-2 text-sm font-medium text-white bg-brand-800 hover:bg-brand-900 rounded-lg shadow-sm transition-colors flex items-center gap-1.5"
+                >
+                  Register
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Hamburger Toggle */}
@@ -108,20 +133,45 @@ export function Navbar() {
             Medical Disclaimer
           </Link>
           <div className="pt-3 border-t border-surface-200 flex flex-col gap-2">
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2.5 px-4 text-sm font-medium text-brand-800 border border-brand-200 rounded-lg hover:bg-brand-50"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/signup"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2.5 px-4 text-sm font-medium text-white bg-brand-800 rounded-lg shadow-sm hover:bg-brand-900"
-            >
-              Register Account
-            </Link>
+            {user ? (
+              <>
+                <Link
+                  href="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center py-2.5 px-4 text-sm font-medium text-brand-900 bg-brand-50 border border-brand-200 rounded-lg flex items-center justify-center gap-2"
+                >
+                  <UserIcon className="w-4 h-4 text-brand-700" />
+                  My Profile ({profile?.display_name || user.email?.split('@')[0]})
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    signOut();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="w-full text-center py-2 px-4 text-sm font-medium text-slate-600 hover:text-slate-900"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center py-2.5 px-4 text-sm font-medium text-brand-800 border border-brand-200 rounded-lg hover:bg-brand-50"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full text-center py-2.5 px-4 text-sm font-medium text-white bg-brand-800 rounded-lg shadow-sm hover:bg-brand-900"
+                >
+                  Register Account
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}
