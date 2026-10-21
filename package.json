@@ -7,7 +7,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "npx tsx tests/matching.test.ts && npx tsx tests/e2e_pipeline.test.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
