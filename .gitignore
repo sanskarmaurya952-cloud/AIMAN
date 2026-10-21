@@ -3,6 +3,9 @@
 /.pnp
 .pnp.js
 .yarn/cache
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # Testing
 /coverage
