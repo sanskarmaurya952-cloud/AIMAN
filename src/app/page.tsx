@@ -17,12 +17,14 @@ import {
   FileText,
 } from 'lucide-react';
 import { VoiceSearchModal } from '@/components/voice/VoiceSearchModal';
+import { PhotoSearchModal } from '@/components/ocr/PhotoSearchModal';
 
 export default function HomePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'text' | 'voice' | 'photo'>('text');
   const [searchQuery, setSearchQuery] = useState('');
   const [voiceModalOpen, setVoiceModalOpen] = useState(false);
+  const [photoModalOpen, setPhotoModalOpen] = useState(false);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -186,13 +188,14 @@ export default function HomePage() {
                   Supports JPG, PNG, WebP up to 10MB. Text is editable and confirmed by you before lookup.
                 </div>
                 <div>
-                  <Link
-                    href="/search?mode=photo"
+                  <button
+                    type="button"
+                    onClick={() => setPhotoModalOpen(true)}
                     className="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-800 hover:bg-brand-900 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm"
                   >
                     <Camera className="w-4 h-4" />
                     Upload / Scan Medicine
-                  </Link>
+                  </button>
                 </div>
               </div>
             )}
@@ -313,8 +316,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Voice Search Modal */}
+      {/* Voice & Photo Multi-Modal Modals */}
       <VoiceSearchModal isOpen={voiceModalOpen} onClose={() => setVoiceModalOpen(false)} />
+      <PhotoSearchModal isOpen={photoModalOpen} onClose={() => setPhotoModalOpen(false)} />
     </div>
   );
 }
