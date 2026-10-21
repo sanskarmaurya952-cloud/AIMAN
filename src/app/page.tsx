@@ -16,11 +16,13 @@ import {
   Building2,
   FileText,
 } from 'lucide-react';
+import { VoiceSearchModal } from '@/components/voice/VoiceSearchModal';
 
 export default function HomePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'text' | 'voice' | 'photo'>('text');
   const [searchQuery, setSearchQuery] = useState('');
+  const [voiceModalOpen, setVoiceModalOpen] = useState(false);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,13 +158,14 @@ export default function HomePage() {
                   &ldquo;Find the price information for paracetamol 650 and show nearby Jan Aushadhi Kendras&rdquo;
                 </div>
                 <div>
-                  <Link
-                    href="/search?mode=voice"
+                  <button
+                    type="button"
+                    onClick={() => setVoiceModalOpen(true)}
                     className="inline-flex items-center gap-2 px-6 py-2.5 bg-brand-800 hover:bg-brand-900 text-white rounded-lg text-sm font-semibold transition-colors shadow-sm"
                   >
                     <Mic className="w-4 h-4" />
                     Start Voice Search
-                  </Link>
+                  </button>
                 </div>
               </div>
             )}
@@ -309,6 +312,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Voice Search Modal */}
+      <VoiceSearchModal isOpen={voiceModalOpen} onClose={() => setVoiceModalOpen(false)} />
     </div>
   );
 }

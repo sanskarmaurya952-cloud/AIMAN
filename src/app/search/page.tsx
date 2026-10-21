@@ -19,11 +19,13 @@ import {
   ArrowRight,
   ExternalLink,
   Loader2,
+  Mic,
 } from 'lucide-react';
 import { identifyMedicine, MedicineIdentificationResult, MatchCandidate } from '@/lib/matching/engine';
 import { useAuth } from '@/context/AuthContext';
 import { createClient } from '@/lib/supabase/client';
 import { DisclaimerBanner } from '@/components/ui/DisclaimerBanner';
+import { VoiceSearchModal } from '@/components/voice/VoiceSearchModal';
 
 function SearchComponent() {
   const router = useRouter();
@@ -38,6 +40,7 @@ function SearchComponent() {
   const [result, setResult] = useState<MedicineIdentificationResult | null>(null);
   const [selectedCandidate, setSelectedCandidate] = useState<MatchCandidate | null>(null);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [voiceModalOpen, setVoiceModalOpen] = useState(false);
 
   useEffect(() => {
     if (initialQuery.trim()) {
@@ -134,10 +137,18 @@ function SearchComponent() {
               value={queryInput}
               onChange={(e) => setQueryInput(e.target.value)}
               placeholder="Search medicine brand, generic name, or salt (e.g. Dolo 650, Metformin)..."
-              className="w-full pl-10 pr-4 py-3 text-sm sm:text-base border border-surface-300 rounded-xl focus:border-brand-600 focus:ring-1 focus:ring-brand-600 text-slate-900 bg-white"
+              className="w-full pl-10 pr-12 py-3 text-sm sm:text-base border border-surface-300 rounded-xl focus:border-brand-600 focus:ring-1 focus:ring-brand-600 text-slate-900 bg-white"
               required
             />
             <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <button
+              type="button"
+              onClick={() => setVoiceModalOpen(true)}
+              className="p-1.5 rounded-lg text-slate-400 hover:text-brand-800 hover:bg-brand-50 absolute right-3 top-1/2 -translate-y-1/2 transition-colors"
+              title="Search by voice"
+            >
+              <Mic className="w-5 h-5" />
+            </button>
           </div>
           <button
             type="submit"
@@ -146,6 +157,9 @@ function SearchComponent() {
             Search
           </button>
         </form>
+
+        {/* Voice Search Modal */}
+        <VoiceSearchModal isOpen={voiceModalOpen} onClose={() => setVoiceModalOpen(false)} />
 
         {/* Quick Suggestions */}
         <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 mt-3">
